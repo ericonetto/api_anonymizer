@@ -6,7 +6,7 @@ from pydantic import BaseModel, ValidationError, validator
 from typing import Union
 import json
 from api_anonymizer import RequestWithRashedResponse
-
+import os
 
 app = FastAPI()
 
@@ -15,19 +15,19 @@ security = HTTPBasic()
 
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     current_username_bytes = credentials.username.encode("utf8")
-    correct_username_bytes = b"ericonetto"
+    correct_username_bytes = os.environ.get("USERNAME", "").encode("utf8")
     is_correct_username = secrets.compare_digest(
         current_username_bytes, correct_username_bytes
     )
     current_password_bytes = credentials.password.encode("utf8")
-    correct_password_bytes = b"swordfish"
+    correct_password_bytes = os.environ.get('PASSWORD', "").encode("utf8")
     is_correct_password = secrets.compare_digest(
         current_password_bytes, correct_password_bytes
     )
     if not (is_correct_username and is_correct_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Failed authentication!",
             headers={"WWW-Authenticate": "Basic"},
         )
     return credentials.username
