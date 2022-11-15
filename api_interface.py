@@ -1,8 +1,8 @@
 import secrets
+
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel, ValidationError, validator
-from fastapi.security import APIKeyQuery
 from typing import Union
 import json
 from api_anonymizer import RequestWithRashedResponse
@@ -13,9 +13,9 @@ app = FastAPI()
 security = HTTPBasic()
 
 
-def authenticate(credentials: APIKeyQuery = Depends(security)):
-    current_username_bytes = credentials..username.encode("utf8")
-    correct_username_bytes = b"stanleyjobson"
+def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    current_username_bytes = credentials.username.encode("utf8")
+    correct_username_bytes = b"ericonetto"
     is_correct_username = secrets.compare_digest(
         current_username_bytes, correct_username_bytes
     )
@@ -51,7 +51,7 @@ class ApiCall(BaseModel):
 
 
 @app.post("/api/")
-async def forward_api(api: ApiCall, authenticated: bool = Depends(authenticate)):
+async def forward_api(api: ApiCall, username: str = Depends(get_current_username)):
 
 
 
