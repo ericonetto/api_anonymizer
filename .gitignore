@@ -1,0 +1,17 @@
+*.log
+**/__pycache__/
+./__pycache__/*
+env
+.vscode/*
+/.vscode/
+config.ini
+*.log
+**/__pycache__/
+./__pycache__/*
+venv
+.vscode/*
+/.vscode/
+config.ini
+tests_files/*
+tests_files
+.DS_Store
