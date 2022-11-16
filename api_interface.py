@@ -40,7 +40,7 @@ class ApiCallAuth(BaseModel):
     url: str
     headers: dict ={"Authorization":"Basic "}
     payload: Union[str, None] = None
-    hashed_filds: list
+    hashed_fields: list
 
     @validator('method')
     def method_must_be_valid(cls, v):
@@ -67,7 +67,7 @@ class ApiCall(BaseModel):
 
 @app.post("/config_foreign_api/")
 async def set_foreign_api_authentication_and_hashed_fields(api: ApiCallAuth, username: str = Depends(get_current_username)):
-    hashed_filds=api.hashed_filds
+    hashed_fields=api.hashed_fields
 
     url = api.url
     if api.payload:
@@ -83,7 +83,7 @@ async def set_foreign_api_authentication_and_hashed_fields(api: ApiCallAuth, use
     if response.status_code==200:
         auth_header = response.request.headers["Authorization"]
         os.environ["FOREIGN_AUTH_HEADER"] = auth_header
-        os.environ["HASHED_FIELDS"] = str(hashed_filds)
+        os.environ["HASHED_FIELDS"] = str(hashed_fields)
         return "AUTHORIZATION VALIDATED!, Now set to: 'Authorization': '" + auth_header + "'"
     else:
         raise HTTPException(
@@ -124,17 +124,17 @@ async def foreign_api(api: ApiCall, username: str = Depends(get_current_username
     if not "HASHED_FIELDS" in os.environ:
         raise HTTPException(
             status_code=status.HTTP_412_PRECONDITION_FAILED,
-            detail="hashed_filds of the foreign api must be set by the endpoint /config_foreign_api",
+            detail="hashed_fields of the foreign api must be set by the endpoint /config_foreign_api",
             headers={"WWW-Authenticate": "Basic"},
         )
 
 
     foreign_auth_header = os.environ["FOREIGN_AUTH_HEADER"]
-    hashed_filds=json.loads(os.environ["HASHED_FIELDS"].replace("'","\""))
+    hashed_fields=json.loads(os.environ["HASHED_FIELDS"].replace("'","\""))
     headers["Authorization"]=foreign_auth_header
 
 
-    response = RequestWithRashedResponse.request(api.method, url, headers=headers, data=payload, hashed_filds=hashed_filds)
+    response = RequestWithRashedResponse.request(api.method, url, headers=headers, data=payload, hashed_fields=hashed_fields)
 
     if response.status_code==200:
         return json.loads(response.text)
@@ -183,15 +183,15 @@ async def foreign_api(
     if not "HASHED_FIELDS" in os.environ:
         raise HTTPException(
             status_code=status.HTTP_412_PRECONDITION_FAILED,
-            detail="hashed_filds of the foreign api must be set by the endpoint /config_foreign_api",
+            detail="hashed_fields of the foreign api must be set by the endpoint /config_foreign_api",
             headers={"WWW-Authenticate": "Basic"},
         )
 
 
     foreign_auth_header = os.environ["FOREIGN_AUTH_HEADER"]
     headers["Authorization"]=foreign_auth_header
-    hashed_filds=jjson.loads(os.environ["HASHED_FIELDS"].replace("'","\""))
-    response = RequestWithRashedResponse.request(x_method, url, headers=headers, data=payload, hashed_filds=hashed_filds)
+    hashed_fields=jjson.loads(os.environ["HASHED_FIELDS"].replace("'","\""))
+    response = RequestWithRashedResponse.request(x_method, url, headers=headers, data=payload, hashed_fields=hashed_fields)
 
     if response.status_code==200:
         return json.loads(response.text)

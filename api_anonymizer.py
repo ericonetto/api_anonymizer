@@ -8,16 +8,16 @@ class RequestWithRashedResponse:
     
     def request(method, url, **kwargs):
         
-        if "hashed_filds" in kwargs:
-            hashed_filds=kwargs["hashed_filds"]
-            del kwargs["hashed_filds"]
+        if "hashed_fields" in kwargs:
+            hashed_fields=kwargs["hashed_fields"]
+            del kwargs["hashed_fields"]
 
             with sessions.Session() as session:
                 response =  session.request(method=method, url=url, **kwargs)
 
 
                 hashed_response_text = response.text
-                for field in hashed_filds:
+                for field in hashed_fields:
 
                     regex = re.compile("\"" + field + r"\":\"(?P<value>.*?)\"", re.IGNORECASE)
                     list_to_hash=regex.findall(hashed_response_text)#.group("value")
