@@ -106,7 +106,7 @@ async def forward_api(api: ApiCall, username: str = Depends(get_current_username
     headers = api.headers
 
 
-    foreign_auth_header = os.environ["FOREIGN_AUTH_HEADER"]
+
     if headers!=None:
         if "Authorization" in headers:
             raise HTTPException(
@@ -117,6 +117,14 @@ async def forward_api(api: ApiCall, username: str = Depends(get_current_username
     else:
         headers={}
 
+    if "FOREIGN_AUTH_HEADER" not in os.environ:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="Authentication of the foreign api must be set by the endpoint /set_foreign_auth_headers",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    foreign_auth_header = os.environ["FOREIGN_AUTH_HEADER"]
     headers["Authorization"]=foreign_auth_header
 
 
@@ -152,8 +160,6 @@ async def forward_api(
         payload={}
 
     
-    
-    foreign_auth_header = os.environ["FOREIGN_AUTH_HEADER"]
     regex = re.compile("\"Authorization\":.*\"(?P<value>.*?)\"", re.IGNORECASE)
     if len(regex.findall(x_headers))>0:
         raise HTTPException(
@@ -163,6 +169,15 @@ async def forward_api(
         )
 
     headers = json.loads(x_headers)
+
+    if "FOREIGN_AUTH_HEADER" not in os.environ:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="Authentication of the foreign api must be set by the endpoint /set_foreign_auth_headers",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    foreign_auth_header = os.environ["FOREIGN_AUTH_HEADER"]
     headers["Authorization"]=foreign_auth_header
     response = RequestWithRashedResponse.request(x_method, url, headers=headers, data=payload, hashed_filds=hashed_filds)
 
