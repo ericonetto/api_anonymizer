@@ -38,7 +38,7 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
 class ApiCallAuth(BaseModel):
     method: str
     url: str
-    headers: dict =None
+    headers: dict ={"Authorization":"Basic "}
     payload: Union[str, None] = None
     hashed_filds: list
 
@@ -53,7 +53,7 @@ class ApiCallAuth(BaseModel):
 class ApiCall(BaseModel):
     method: str
     url: str
-    headers: dict ={"Authorization":"Basic "}
+    headers: dict =None
     payload: Union[str, None] = None
 
     @validator('method')
