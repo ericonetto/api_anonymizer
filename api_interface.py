@@ -66,7 +66,7 @@ class ApiCall(BaseModel):
 
 
 @app.post("/config_foreign_api/")
-async def set_foreign_auth(api: ApiCallAuth, username: str = Depends(get_current_username)):
+async def set_foreign_api_authentication_and_hashed_fields(api: ApiCallAuth, username: str = Depends(get_current_username)):
     hashed_filds=api.hashed_filds
 
     url = api.url
@@ -94,7 +94,7 @@ async def set_foreign_auth(api: ApiCallAuth, username: str = Depends(get_current
 
 
 @app.post("/api/")
-async def forward_api(api: ApiCall, username: str = Depends(get_current_username)):
+async def foreign_api(api: ApiCall, username: str = Depends(get_current_username)):
 
     url = api.url
     if api.payload:
@@ -147,7 +147,7 @@ async def forward_api(api: ApiCall, username: str = Depends(get_current_username
 
 
 @app.get("/api/")
-async def forward_api(
+async def foreign_api(
     x_method: str = Header(),
     x_url: str = Header(),
     x_headers: str = Header(default=None),
