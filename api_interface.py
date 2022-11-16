@@ -1,12 +1,13 @@
 import secrets
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Header
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel, ValidationError, validator
 from typing import Union
 import json
 from api_anonymizer import RequestWithRashedResponse
 import os
+from typing import List, Union
 
 app = FastAPI()
 
@@ -70,3 +71,27 @@ async def forward_api(api: ApiCall, username: str = Depends(get_current_username
 
     return json.loads(response.text)
 
+@app.get("/api/")
+async def forward_api(
+    x_method: str = Header(),
+    x_url: str = Header(),
+    x_headers: str = Header(default=None),
+    x_hashed_filds: str = Header(default=None),
+    x_payload: str = Header(default=None)
+    ):
+
+
+
+    hashed_filds=json.loads(x_hashed_filds)
+
+    url = x_url
+    if x_payload:
+        payload=json.loads(x_payload)
+    else:
+        payload={}
+    
+    headers = json.loads(x_headers)
+    response = RequestWithRashedResponse.request(x_method, url, headers=headers, data=payload, hashed_filds=hashed_filds)
+
+
+    return json.loads(response.text)
