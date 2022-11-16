@@ -119,7 +119,7 @@ async def forward_api(api: ApiCall, username: str = Depends(get_current_username
 
     if "FOREIGN_AUTH_HEADER" not in os.environ:
         raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            status_code=status.HTTP_412_PRECONDITION_FAILED,
             detail="Authentication of the foreign api must be set by the endpoint /set_foreign_auth_headers",
             headers={"WWW-Authenticate": "Basic"},
         )
@@ -172,7 +172,7 @@ async def forward_api(
 
     if "FOREIGN_AUTH_HEADER" not in os.environ:
         raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            status_code=status.HTTP_412_PRECONDITION_FAILED,
             detail="Authentication of the foreign api must be set by the endpoint /set_foreign_auth_headers",
             headers={"WWW-Authenticate": "Basic"},
         )
