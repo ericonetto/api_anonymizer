@@ -35,9 +35,7 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     return credentials.username
 
 
-
-
-class ApiCall(BaseModel):
+class ApiCallAuth(BaseModel):
     method: str
     url: str
     headers: dict =None
@@ -51,7 +49,8 @@ class ApiCall(BaseModel):
             raise ValueError('must be one of the valid methods: ' + str(valid_methods))
         return v.title()
 
-class ApiAuth(BaseModel):
+
+class ApiCall(BaseModel):
     method: str
     url: str
     headers: dict =None
@@ -65,9 +64,10 @@ class ApiAuth(BaseModel):
         return v.title()
 
 
-@app.post("/set_foreign_auth_header/")
-async def set_foreign_auth(api: ApiAuth, username: str = Depends(get_current_username)):
 
+@app.post("/config_foreign_api/")
+async def set_foreign_auth(api: ApiCallAuth, username: str = Depends(get_current_username)):
+    hashed_filds=api.hashed_filds
 
     url = api.url
     if api.payload:
@@ -83,6 +83,7 @@ async def set_foreign_auth(api: ApiAuth, username: str = Depends(get_current_use
     if response.status_code==200:
         auth_header = response.request.headers["Authorization"]
         os.environ["FOREIGN_AUTH_HEADER"] = auth_header
+        os.environ["HASHED_FIELDS"] = str(hashed_filds)
         return "AUTHORIZATION VALIDATED!, Now set to: 'Authorization': '" + auth_header + "'"
     else:
         raise HTTPException(
@@ -95,8 +96,6 @@ async def set_foreign_auth(api: ApiAuth, username: str = Depends(get_current_use
 @app.post("/api/")
 async def forward_api(api: ApiCall, username: str = Depends(get_current_username)):
 
-    hashed_filds=api.hashed_filds
-
     url = api.url
     if api.payload:
         payload=api.payload
@@ -105,26 +104,33 @@ async def forward_api(api: ApiCall, username: str = Depends(get_current_username
     
     headers = api.headers
 
-
-
     if headers!=None:
         if "Authorization" in headers:
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Authentication of the foreign api must be set by the endpoint /set_foreign_auth_header. Remove the Authorization key from headers",
+                detail="Authentication of the foreign api must be set by the endpoint /config_foreign_api. Remove the Authorization key from headers",
                 headers={"WWW-Authenticate": "Basic"},
             )
     else:
         headers={}
 
-    if "FOREIGN_AUTH_HEADER" not in os.environ:
+    if not "FOREIGN_AUTH_HEADER"  in os.environ:
         raise HTTPException(
             status_code=status.HTTP_412_PRECONDITION_FAILED,
-            detail="Authentication of the foreign api must be set by the endpoint /set_foreign_auth_headers",
+            detail="Authentication of the foreign api must be set by the endpoint /config_foreign_api",
             headers={"WWW-Authenticate": "Basic"},
         )
 
+    if not "HASHED_FIELDS" in os.environ:
+        raise HTTPException(
+            status_code=status.HTTP_412_PRECONDITION_FAILED,
+            detail="hashed_filds of the foreign api must be set by the endpoint /config_foreign_api",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+
     foreign_auth_header = os.environ["FOREIGN_AUTH_HEADER"]
+    hashed_filds=json.loads(os.environ["HASHED_FIELDS"].replace("'","\""))
     headers["Authorization"]=foreign_auth_header
 
 
@@ -145,13 +151,9 @@ async def forward_api(
     x_method: str = Header(),
     x_url: str = Header(),
     x_headers: str = Header(default=None),
-    x_hashed_filds: str = Header(default=None),
     x_payload: str = Header(default=None)
     ):
 
-
-
-    hashed_filds=json.loads(x_hashed_filds)
 
     url = x_url
     if x_payload:
@@ -164,21 +166,31 @@ async def forward_api(
     if len(regex.findall(x_headers))>0:
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail="Authentication of the foreign api must be set by the endpoint /set_foreign_auth_header. Remove the Authorization key from x-headers",
+            detail="Authentication of the foreign api must be set by the endpoint /config_foreign_api. Remove the Authorization key from x-headers",
             headers={"WWW-Authenticate": "Basic"},
         )
 
     headers = json.loads(x_headers)
 
-    if "FOREIGN_AUTH_HEADER" not in os.environ:
+    if not "FOREIGN_AUTH_HEADER" in os.environ:
         raise HTTPException(
             status_code=status.HTTP_412_PRECONDITION_FAILED,
-            detail="Authentication of the foreign api must be set by the endpoint /set_foreign_auth_headers",
+            detail="Authentication of the foreign api must be set by the endpoint /config_foreign_api",
             headers={"WWW-Authenticate": "Basic"},
         )
 
+
+    if not "HASHED_FIELDS" in os.environ:
+        raise HTTPException(
+            status_code=status.HTTP_412_PRECONDITION_FAILED,
+            detail="hashed_filds of the foreign api must be set by the endpoint /config_foreign_api",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+
     foreign_auth_header = os.environ["FOREIGN_AUTH_HEADER"]
     headers["Authorization"]=foreign_auth_header
+    hashed_filds=jjson.loads(os.environ["HASHED_FIELDS"].replace("'","\""))
     response = RequestWithRashedResponse.request(x_method, url, headers=headers, data=payload, hashed_filds=hashed_filds)
 
     if response.status_code==200:
