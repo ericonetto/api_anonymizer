@@ -4,7 +4,7 @@
 
 During my work as tech consultant I was many times faced by privacy issues regarding GDPR.
 
-One client once wanted to make a report of of the usage of his system  by consultin a API with PowerBI ang generating a report.
+One client once wanted to make a report of of the usage of his system  by consultin a API with PowerBI.
 The problem is that the report always came out with sensitive information, like name and email, etc.
 
 Those where fields from the API call that didn't obfuscated those sensitive fields.
