@@ -30,6 +30,7 @@ here you set up the authentication for this middleware API with this two variabl
 
 
 The easiest way would be to use Docker
+
 Copy the Dockerfile and then:
 
     docker build -t api_anonymizer . && docker run -p 4557:4557 -it api_anonymizer
