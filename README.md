@@ -62,9 +62,10 @@ In the **JSON body** you pass the parameters to authenticate to the foreign API
 
 **hashed_fields**: a JSON list object with the names of the fields to be obfuscated of any response from the foreign API.
 
-With that done, you use one of those middleware API endpoints:
+With that done, you use one of those middleware API endpoints GET or POST:
 
 GET `/api` 
+
 Passing these foreign API parameters in the this middleware header parameters:
 
 x-method 
@@ -75,14 +76,17 @@ x-headers
 
 x-payload
 
+
 POST `/api`
+
 Passing these foreign API parameters in the JSON body:
-{
+
+`{
   "method": "string",
   "url": "string",
   "headers": {},
   "payload": "string"
-}
+}`
 
 *The authentication with the foreign API will be done in the background using the authentication configured on the configuration step, **so you dont need to pass it again**.*
 
