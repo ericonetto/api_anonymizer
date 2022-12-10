@@ -1,0 +1,7 @@
+{
+    "name": "API anonymizer",
+    "description": "Middleware API that hash specific fields of a foreign API",
+    "repository": "https://github.com/ericonetto/api_anonymizer",
+    "logo": "https://gdpr.eu/wp-content/themes/gdpr/assets/favicon-32x32.png",
+    "keywords": ["gdpr", "hashed", "privacy", "api", "interface"]
+  }
