@@ -18,6 +18,13 @@ So I developed this server-less API layer that could be configured to obfuscate 
 
 # How to set it up
 
+Important file
+.env
+here you set up the authentication for this middleware API with this two variables
+`USERNAME=yourusername` 
+`PASSWORD=yourpassword` 
+
+
 The easiest way would be to use Docker
 Copy the Dockerfile and then:
 
