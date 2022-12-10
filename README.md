@@ -4,17 +4,19 @@
 
 During my work as tech consultant I was many times faced by privacy issues regarding GDPR.
 
-One client once wanted to make a report of its clients using his system using  a API and PowerBI.
-The problem is that the report always came out with sensitive information, like name and email, etc. Those where fields from the API call that didn't obfuscated those sensitive fields.
-While would be easy to simply remove those fields that was not an option because each data needed to be individually distinguished at the final report.
+One client once wanted to make a report of of the usage of his system  by consultin a API with PowerBI ang generating a report.
+The problem is that the report always came out with sensitive information, like name and email, etc.
 
-Since this client didn't owned or wanted to change the code of the API he was consulting it was impossible to change the API behaviour.
+Those where fields from the API call that didn't obfuscated those sensitive fields.
+While would be easy to simply remove those fields, that was not an option since each of those fields where needed to be individually distinguished at the final report.
 
-So I came up with an idea: hash the sensitive field value with an intermediary API layer.
+It was impossible to change the API behaviour, since this client didn't owned or wanted to change the code of the API he was consulting.
 
-Hashing provides a unique string representing the field value thus enabling data analysis without really revealing the sensitive data.
+Then I came up with an idea: hash the sensitive field value with an intermediary API layer.
 
-So I developed this server-less API layer that could be configured to obfuscate certain fields returned by the foreign API.
+Hashing provides a unique string representing the field value, thus enabling data analysis without really revealing the sensitive data.
+
+I then developed this API layer that could be configured to obfuscate certain fields returned by the foreign API.
 
 # How to set it up
 
