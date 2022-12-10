@@ -9,6 +9,7 @@ One client once wanted to make a report of of the usage of his system  by consul
 The problem is that the report always came out with sensitive information, like name and email, etc.
 
 Those where fields from the API call that didn't obfuscated those sensitive fields.
+
 While would be easy to simply remove those fields, that was not an option since each of those fields where needed to be individually distinguished at the final report.
 
 It was impossible to change the API behaviour, since this client didn't owned or wanted to change the code of the API he was consulting.
