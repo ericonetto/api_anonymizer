@@ -66,6 +66,7 @@ With that done, you use one of those middleware API endpoints:
 
 GET `/api` 
 Passing these foreign API parameters in the this middleware header parameters:
+
 x-method 
 
 x-url
