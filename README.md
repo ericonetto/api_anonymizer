@@ -49,18 +49,25 @@ In the headers you pass the basic authentication of this middleware API.
 In the **JSON body** you pass the parameters to authenticate to the foreign API
 
 **method**:  GET, POST
+
 **url**: the url of the foreign API
+
 **headers**: this is the headers of to authenticate the foreign API. DONT mistake with the headers of the middleware API.
+
 **payload**: If needed in the process of authentication of the foreign API
 
 **hashed_fields**: a JSON list object with the names of the fields to be obfuscated of any response from the foreign API.
 
 With that done, you use one of those middleware API endpoints:
+
 GET `/api` 
 Passing these foreign API parameters in the this middleware header parameters:
 x-method 
+
 x-url
+
 x-headers
+
 x-payload
 
 POST `/api`
