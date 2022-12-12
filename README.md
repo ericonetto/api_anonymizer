@@ -22,10 +22,14 @@ I then developed this API layer that could be configured to obfuscate certain fi
 
 # How to set it up
 
-Important file
-.env
-here you set up the authentication for this middleware API with this two variables
+Important file:
+
+**.env**
+
+Where you set up the authentication for this middleware API with this two variables:
+
 `USERNAME=yourusername` 
+
 `PASSWORD=yourpassword` 
 
 
@@ -105,6 +109,7 @@ Only a admin person with the correct authentication to the foreign API will be a
 MIT Licence
 
 **Copyright © 11 December 2022, Erico NETTO**
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
