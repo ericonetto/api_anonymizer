@@ -33,9 +33,9 @@ Where you set up the authentication for this middleware API with this two variab
 `PASSWORD=yourpassword` 
 
 
-The easiest way would be to use Docker
+Then, the easiest way to start up this middleware API would be to use Docker:
 
-Copy the Dockerfile and then:
+Copy the Dockerfile at the same folder were is the **.env** file and then:
 
     docker build -t api_anonymizer . && docker run -p 4557:4557 -it api_anonymizer
 
