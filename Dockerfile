@@ -1,6 +1,11 @@
 # Step 1: Use official lightweight Python image as base OS.
 FROM python:3-alpine
 
+ARG USERNAME
+ARG PASSWORD
+ENV USERNAME=$USERNAME
+ENV PASSWORD=$PASSWORD
+
 RUN apk update && apk add git
 
 ENV APP_HOME /app
