@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  api_anonymizer:
+    build:
+      context: .
+      args:
+        - USERNAME=myusername
+        - PASSWORD=mypassword
+    ports:
+      - "4557:4557" 
